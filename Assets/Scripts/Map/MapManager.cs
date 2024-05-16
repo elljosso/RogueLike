@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class MapManager : MonoBehaviour
 {
@@ -19,7 +18,7 @@ public class MapManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+        
     public static MapManager Get { get => instance; }
 
     [Header("TileMaps")]
@@ -36,7 +35,6 @@ public class MapManager : MonoBehaviour
     public Dictionary<Vector2Int, Node> Nodes = new Dictionary<Vector2Int, Node>();
     public List<Vector3Int> VisibleTiles;
     public Dictionary<Vector3Int, TileData> Tiles;
-    
 
     [Header("Map Settings")]
     public int width = 80;
@@ -44,6 +42,7 @@ public class MapManager : MonoBehaviour
     public int roomMaxSize = 10;
     public int roomMinSize = 6;
     public int maxRooms = 30;
+    public int maxEnemies = 2; // Nieuw toegevoegde variabele voor het maximum aantal vijanden.
 
     private void Start()
     {
@@ -55,22 +54,17 @@ public class MapManager : MonoBehaviour
         Tiles = new Dictionary<Vector3Int, TileData>();
         VisibleTiles = new List<Vector3Int>();
 
-        var generator = new DungeonGenerator();
-        generator.SetSize(width, height);
-        generator.SetRoomSize(roomMinSize, roomMaxSize);
-        generator.SetMaxRooms(maxRooms);
-        generator.Generate();
+        // Set the maximum number of enemies
+        DungeonGenerator dungeonGenerator = new DungeonGenerator();
+        dungeonGenerator.SetSize(width, height);
+        dungeonGenerator.SetRoomSize(roomMinSize, roomMaxSize);
+        dungeonGenerator.SetMaxRooms(maxRooms);
+        dungeonGenerator.SetMaxEnemies(maxEnemies); // Set the maximum number of enemies
+        dungeonGenerator.Generate();
 
         AddTileMapToDictionary(FloorMap);
         AddTileMapToDictionary(ObstacleMap);
         SetupFogMap();
-    }
-
-    public GameObject CreateActor(string name, Vector2 position)
-    {
-        GameObject actor = Instantiate(Resources.Load<GameObject>($"Prefabs/{name}"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity);
-        actor.name = name;
-        return actor;
     }
 
     public bool InBounds(int x, int y) => 0 <= x && x < width && 0 <= y && y < height;
