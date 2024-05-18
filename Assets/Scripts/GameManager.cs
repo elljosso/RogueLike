@@ -6,8 +6,10 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
 
+    public Actor Player { get; set; }
     // Lijst van vijanden
-    private List<Actor> enemies = new List<Actor>();
+    public List<Actor> Enemies { get; private set; } = new List<Actor>();
+
 
     private void Awake()
     {
@@ -22,23 +24,58 @@ public class GameManager : MonoBehaviour
     }
 
     public static GameManager Get { get => instance; }
-
     public Actor GetActorAtLocation(Vector3 location)
     {
         // Plaats hier eventuele logica om een Actor op een bepaalde locatie te vinden
+        if (Player != null && Player.transform.position == location)
+        {
+            return Player;
+        }
+        foreach (var enemy in Enemies)
+        {
+            if (enemy != null && enemy.transform.position == location)
+            {
+                return enemy;
+            }
+        }
         return null;
     }
+    
 
-    // Functie om een vijand toe te voegen aan de lijst met vijanden
-    public void AddEnemy(Actor enemy)
-    {
-        enemies.Add(enemy);
-        // Voeg hier eventueel verdere logica toe, zoals het activeren van de vijand in de game wereld.
-    }
     public GameObject CreateActor(string name, Vector2 position)
     {
         GameObject actor = Instantiate(Resources.Load<GameObject>($"Prefabs/{name}"), new Vector3(position.x + 0.5f, position.y + 0.5f, 0), Quaternion.identity);
+
+        if (name == "Player")
+        {
+            Player = actor.GetComponent<Actor>();
+        }
+        else
+        {
+            AddEnemy(actor.GetComponent<Actor>());
+        }
+
         actor.name = name;
         return actor;
     }
+    public void AddEnemy(Actor enemy)
+    {
+        Enemies.Add(enemy);
+    }
+    private void Start()
+    {
+        Player = GetComponent<Actor>();
+    }
+    public void StartEnemyTurn()
+    {
+        foreach (var enemy in GameManager.Get.Enemies)
+        {
+            Enemy enemyComponent = enemy.GetComponent<Enemy>();
+            if (enemyComponent != null)
+            {
+                enemyComponent.RunAI();
+            }
+        }
+    }
+
 }
