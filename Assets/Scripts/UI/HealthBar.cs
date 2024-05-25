@@ -13,15 +13,28 @@ public class HealthBar : MonoBehaviour
         var uiDocument = GetComponent<UIDocument>();
         root = uiDocument.rootVisualElement;
 
-        // Assuming you have elements in your UXML with these names
-        healthBar = root.Q<VisualElement>("healthBar");
-        healthLabel = root.Q<Label>("healthLabel");
+        // Zoek de UI-elementen voor de gezondheidsbalk en het label
+        healthBar = root.Q<VisualElement>("HealthBar");
+        healthLabel = root.Q<Label>("HealthText");
+
+        if (healthBar == null)
+        {
+            Debug.LogError("HealthBar element not found in the UI hierarchy!");
+        }
     }
 
     public void SetValues(int currentHitPoints, int maxHitPoints)
     {
-        float percent = (float)currentHitPoints / maxHitPoints * 100;
-        healthBar.style.width = new Length(percent, LengthUnit.Percent);
+        // Bereken het percentage HP
+        float percent = (float)currentHitPoints / maxHitPoints;
+
+        // Converteer het percentage naar een breedte als percentage van het ouder-element
+        Length width = new Length(percent, LengthUnit.Percent);
+
+        // Pas de breedte van de balk aan op basis van het percentage HP
+        healthBar.style.width = width;
+
+        // Stel de tekst van het label in op de huidige HP
         healthLabel.text = $"{currentHitPoints}/{maxHitPoints} HP";
     }
 }

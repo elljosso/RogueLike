@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 94317521391322681}
   - component: {fileID: 2241492926331584284}
   - component: {fileID: 3573569028417947612}
+  - component: {fileID: 2666073046504704341}
   m_Layer: 0
   m_Name: Kip
   m_TagString: Untagged
@@ -100,6 +101,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FieldOfView: []
   FieldOfViewRange: 8
+  maxHitPoints: 16
+  hitPoints: 16
+  defense: 1
+  power: 4
 --- !u!114 &3573569028417947612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,5 +115,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b32b3596043e6b74bac1318ade8bf725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2666073046504704341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142440675044772610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af028bd8c61434a4f8119d19adbf4b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

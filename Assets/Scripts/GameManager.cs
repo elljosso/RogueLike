@@ -70,12 +70,21 @@ public class GameManager : MonoBehaviour
     {
         foreach (var enemy in GameManager.Get.Enemies)
         {
-            Enemy enemyComponent = enemy.GetComponent<Enemy>();
-            if (enemyComponent != null)
+            // Controleer of enemy niet null is voordat we GetComponent aanroepen
+            if (enemy != null)
             {
-                enemyComponent.RunAI();
+                Enemy enemyComponent = enemy.GetComponent<Enemy>();
+                if (enemyComponent != null)
+                {
+                    enemyComponent.RunAI();
+                }
             }
         }
+    }
+    public void RemoveEnemy(Actor enemy)
+    {
+        Enemies.Remove(enemy);
+        Destroy(enemy.gameObject); // Verwijder ook het GameObject van de scene
     }
 
 }

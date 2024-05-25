@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Action : MonoBehaviour
 {
-    // Functie om een actor in de opgegeven richting te verplaatsen
-    static public void Move(Actor actor, Vector2 direction)
+    // Functie om een actor in de opgegeven richting te verplaatsen of aan te vallen
+    static public void MoveOrHit(Actor actor, Vector2 direction)
     {
         // Kijk of er een actor is op de doelpositie
         Actor target = GameManager.Get.GetActorAtLocation(actor.transform.position + (Vector3)direction);
@@ -13,12 +13,22 @@ public class Action : MonoBehaviour
         // Als er geen actor is, verplaatsen we de actor
         if (target == null)
         {
-            actor.Move(direction);
-            actor.UpdateFieldOfView();
+            Move(actor, direction);
+        }
+        else
+        {
+            Hit(actor, target);
         }
 
         // Beëindig de beurt als dit de speler is
         EndTurn(actor);
+    }
+
+    // Functie om een actor in de opgegeven richting te verplaatsen
+    static private void Move(Actor actor, Vector2 direction)
+    {
+        actor.Move(direction);
+        actor.UpdateFieldOfView();
     }
 
     // Functie om de beurt van een actor te beëindigen
@@ -29,6 +39,25 @@ public class Action : MonoBehaviour
         {
             // Start de beurt van vijanden in GameManager
             GameManager.Get.StartEnemyTurn();
+        }
+    }
+
+    // Functie om een actor aan te vallen
+    static public void Hit(Actor actor, Actor target)
+    {
+        // Bereken de schade (damage)
+        int damage = actor.Power - target.Defense;
+
+        // Als de schade positief is, verminder de hitpoints van het target
+        if (damage > 0)
+        {
+            target.DoDamage(damage);
+            UIManager.Instance.AddMessage($"{actor.name} hits {target.name} for {damage} damage.", actor.GetComponent<Player>() ? Color.white : Color.red);
+        }
+        else
+        {
+            // Geen schade, toon een bericht
+            UIManager.Instance.AddMessage($"{actor.name} attacks {target.name} but does no damage.", actor.GetComponent<Player>() ? Color.white : Color.red);
         }
     }
 }

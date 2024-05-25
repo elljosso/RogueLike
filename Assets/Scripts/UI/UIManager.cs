@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
@@ -28,14 +27,22 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        // Get the script components from the GameObjects
         if (HealthBar != null)
         {
             healthBarScript = HealthBar.GetComponent<HealthBar>();
+            if (healthBarScript == null)
+            {
+                Debug.LogError("HealthBar script not found on HealthBar GameObject.");
+            }
         }
+
         if (Messages != null)
         {
             messagesScript = Messages.GetComponent<Messages>();
+            if (messagesScript == null)
+            {
+                Debug.LogError("Messages script not found on Messages GameObject.");
+            }
         }
     }
 

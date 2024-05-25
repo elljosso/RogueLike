@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     {
         Vector3Int gridPosition = MapManager.Get.FloorMap.WorldToCell(transform.position);
         Vector2 direction = algorithm.Compute((Vector2Int)gridPosition, (Vector2Int)targetPosition);
-        Action.Move(GetComponent<Actor>(), direction);
+        Action.MoveOrHit(GetComponent<Actor>(), direction);
     }
 
     public void RunAI()
@@ -38,8 +38,19 @@ public class Enemy : MonoBehaviour
             // If the enemy was not fighting, it should be fighting now
             isFighting = true;
 
-            // Call MoveAlongPath with the gridPosition
-            MoveAlongPath(gridPosition);
+            // Calculate distance between enemy and target
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+
+            if (distance < 1.5f)
+            {
+                // If distance is less than 1.5, attack the target
+                Action.Hit(GetComponent<Actor>(), target.GetComponent<Actor>());
+            }
+            else
+            {
+                // Otherwise, move along the path
+                MoveAlongPath(gridPosition);
+            }
         }
     }
 }

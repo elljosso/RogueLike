@@ -13,10 +13,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void Start()
     {
-        // Instellen van de speler in de GameManager
+        // Set the player in the GameManager
         GameManager.Get.Player = GetComponent<Actor>();
 
-        // Het aanpassen van de camerapositie
+        // Adjust the camera position
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -5);
     }
 
@@ -42,15 +42,15 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnExit(InputAction.CallbackContext context)
     {
-
+        // Handle exit action if needed
     }
 
     private void Move()
     {
         Vector2 direction = controls.Player.Movement.ReadValue<Vector2>();
         Vector2 roundedDirection = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
-        Debug.Log("begeff");
-        Action.Move(GetComponent<Actor>(), roundedDirection);
+        Debug.Log("Moving in direction: " + roundedDirection);
+        Action.MoveOrHit(GetComponent<Actor>(), roundedDirection);
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -5);
     }
 }
