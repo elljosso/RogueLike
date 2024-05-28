@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -18,7 +17,7 @@ public class MapManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-        
+
     public static MapManager Get { get => instance; }
 
     [Header("TileMaps")]
@@ -42,7 +41,8 @@ public class MapManager : MonoBehaviour
     public int roomMaxSize = 10;
     public int roomMinSize = 6;
     public int maxRooms = 30;
-    public int maxEnemies = 2; // Nieuw toegevoegde variabele voor het maximum aantal vijanden.
+    public int maxEnemies = 2; // Newly added variable for maximum number of enemies.
+    public int maxItems = 2; // Newly added variable for maximum number of items.
 
     private void Start()
     {
@@ -54,12 +54,13 @@ public class MapManager : MonoBehaviour
         Tiles = new Dictionary<Vector3Int, TileData>();
         VisibleTiles = new List<Vector3Int>();
 
-        // Set the maximum number of enemies
+        // Set the maximum number of enemies and items
         DungeonGenerator dungeonGenerator = new DungeonGenerator();
         dungeonGenerator.SetSize(width, height);
         dungeonGenerator.SetRoomSize(roomMinSize, roomMaxSize);
         dungeonGenerator.SetMaxRooms(maxRooms);
-        dungeonGenerator.SetMaxEnemies(maxEnemies); // Set the maximum number of enemies
+        dungeonGenerator.SetMaxEnemies(maxEnemies);
+        dungeonGenerator.SetMaxItems(maxItems); // Set the maximum number of items
         dungeonGenerator.Generate();
 
         AddTileMapToDictionary(FloorMap);
