@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -93,5 +94,22 @@ public class Actor : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void Heal(int hp)
+    {
+        int healedAmount = Mathf.Min(maxHitPoints - hitPoints, hp);
+        hitPoints += healedAmount;
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
+            UIManager.Instance.AddMessage($"You have been healed for {healedAmount} hit points!", Color.green);
+        }
+    }
+
+    internal void Confuse(object duration)
+    {
+        throw new NotImplementedException();
     }
 }

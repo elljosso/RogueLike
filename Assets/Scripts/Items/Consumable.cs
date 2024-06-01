@@ -19,6 +19,16 @@ namespace Items
             get { return type; }
         }
 
+        public bool IsType(ItemType itemType)
+        {
+            return type == itemType;
+        }
+
+        public ItemType GetItemType()
+        {
+            return type;
+        }
+
         private void Start()
         {
             // Voeg het item toe aan de GameManager's Items lijst bij het starten

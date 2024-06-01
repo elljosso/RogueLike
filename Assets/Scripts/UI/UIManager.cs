@@ -7,9 +7,11 @@ public class UIManager : MonoBehaviour
     [Header("Documents")]
     public GameObject HealthBar;
     public GameObject Messages;
+    public GameObject InventoryUIObject;
 
     private HealthBar healthBarScript;
     private Messages messagesScript;
+    private InventoryUI inventoryUIScript;
 
     private void Awake()
     {
@@ -44,6 +46,20 @@ public class UIManager : MonoBehaviour
                 Debug.LogError("Messages script not found on Messages GameObject.");
             }
         }
+
+        if (InventoryUIObject != null)
+        {
+            inventoryUIScript = InventoryUIObject.GetComponent<InventoryUI>();
+            if (inventoryUIScript == null)
+            {
+                Debug.LogError("InventoryUI script not found on InventoryUI GameObject.");
+            }
+        }
+    }
+
+    public InventoryUI InventoryUI
+    {
+        get { return inventoryUIScript; }
     }
 
     public void UpdateHealth(int current, int max)

@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Items
 {
@@ -27,6 +27,11 @@ namespace Items
         public void DropItem(Consumable item)
         {
             items.Remove(item);
+        }
+
+        internal List<Consumable> GetItems()
+        {
+            throw new NotImplementedException();
         }
     }
 }

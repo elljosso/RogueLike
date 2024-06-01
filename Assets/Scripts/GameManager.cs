@@ -121,4 +121,19 @@ public class GameManager : MonoBehaviour
         Items.Remove(item);
         Destroy(item.gameObject); // Remove the GameObject from the scene
     }
+
+    public List<Actor> GetNearbyEnemies(Vector3 location)
+    {
+        List<Actor> nearbyEnemies = new List<Actor>();
+
+        foreach (Actor enemy in Enemies)
+        {
+            if (enemy != null && Vector3.Distance(enemy.transform.position, location) < 5)
+            {
+                nearbyEnemies.Add(enemy);
+            }
+        }
+
+        return nearbyEnemies;
+    }
 }
