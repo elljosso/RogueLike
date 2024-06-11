@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     private Actor target;
     private bool isFighting = false;
     private AStar algorithm;
+    private int confused = 0;
 
     private void Start()
     {
@@ -52,5 +53,9 @@ public class Enemy : MonoBehaviour
                 MoveAlongPath(gridPosition);
             }
         }
+    }
+    public void Confuse()
+    {
+        confused = 8;
     }
 }

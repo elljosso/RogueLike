@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9baa303e5bb0e184d929322ba7d8f4d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorText: {fileID: 0}
   FloorMap: {fileID: 1849172296}
   ObstacleMap: {fileID: 1578167248}
   FogMap: {fileID: 1410258482}
@@ -228,6 +229,7 @@ MonoBehaviour:
   maxRooms: 30
   maxEnemies: 2
   maxItems: 2
+  floor: 0
 --- !u!156049354 &408639669
 Grid:
   m_ObjectHideFlags: 0
@@ -258,6 +260,54 @@ Transform:
   - {fileID: 1410258484}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &513228316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 513228317}
+  - component: {fileID: 513228318}
+  m_Layer: 0
+  m_Name: FloorInfo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &513228317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513228316}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 694846539}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &513228318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513228316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 7788bfa2af2e91545a12cfb5381a7875, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 5a16e7b4009ab5646887aef158257183, type: 3}
+  m_SortingOrder: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +433,7 @@ Transform:
   - {fileID: 1036279436}
   - {fileID: 1009692649}
   - {fileID: 202971857}
+  - {fileID: 513228317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &694846540
@@ -399,7 +450,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HealthBar: {fileID: 1036279433}
   Messages: {fileID: 1009692646}
-  InventoryUIObject: {fileID: 0}
+  InventoryUIObject: {fileID: 202971855}
+  FloorInfoObject: {fileID: 0}
 --- !u!1 &1009692646
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,6 +843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e9d814d41812e47b8511f231aea3e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemiesLeftText: {fileID: 0}
 --- !u!4 &1684302755
 Transform:
   m_ObjectHideFlags: 0

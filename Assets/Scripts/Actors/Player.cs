@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Items;
-using Unity.VisualScripting;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Actor))]
@@ -10,8 +9,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     public Inventory inventory; // Public Inventory instance
     private Controls controls;
 
-    private bool inventoryIsOpen = true;
-    private bool droppingItem = true;
+    private bool inventoryIsOpen = false;
+    private bool droppingItem = false;
     private bool usingItem = false;
 
     private void Awake()
@@ -46,7 +45,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMovement(InputAction.CallbackContext context)
     {
-        if (inventoryIsOpen && context.started)
+        if (inventoryIsOpen && context.performed)
         {
             Vector2 direction = controls.Player.Movement.ReadValue<Vector2>();
             if (direction.y > 0)
@@ -92,6 +91,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         Debug.Log("Moving in direction: " + roundedDirection);
         Action.MoveOrHit(GetComponent<Actor>(), roundedDirection);
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -5);
+
+        // Check for ladder at the current position
+        CheckForLadder();
     }
 
     public void OnGrab(InputAction.CallbackContext context)
@@ -123,7 +125,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (!inventoryIsOpen)
             {
                 // Show the inventory via the UIManager
-                UIManager.Instance.InventoryUI.Show(inventory.GetItems());
+                UIManager.Instance.InventoryUI.Show(inventory.items);
 
                 // Set the inventoryIsOpen and droppingItem flags
                 inventoryIsOpen = true;
@@ -141,7 +143,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (inventoryIsOpen)
             {
                 int selectedItemIndex = UIManager.Instance.InventoryUI.Selected;
-                Consumable[] items = inventory.GetItems().ToArray();
+                Consumable[] items = inventory.items.ToArray();
 
                 if (selectedItemIndex >= 0 && selectedItemIndex < items.Length)
                 {
@@ -151,9 +153,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                     {
                         DropItem(selectedItem);
                     }
-                    else
+                    else if (usingItem)
                     {
-                        UseItem(selectedItem);
+                        UseItem(selectedItem, GetComponent<Actor>()); // Pass the attacker
                     }
 
                     UIManager.Instance.InventoryUI.Hide();
@@ -169,29 +171,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed)
         {
-            if (inventoryIsOpen)
+            if (!inventoryIsOpen)
             {
-                int selectedItemIndex = UIManager.Instance.InventoryUI.Selected;
-                Consumable[] items = inventory.GetItems().ToArray();
-
-                if (selectedItemIndex >= 0 && selectedItemIndex < items.Length)
-                {
-                    Consumable selectedItem = items[selectedItemIndex];
-
-                    if (droppingItem)
-                    {
-                        DropItem(selectedItem);
-                    }
-                    else
-                    {
-                        UseItem(selectedItem);
-                    }
-
-                    UIManager.Instance.InventoryUI.Hide();
-                    inventoryIsOpen = false;
-                    droppingItem = false;
-                    usingItem = false;
-                }
+                UIManager.Instance.InventoryUI.Show(inventory.items);
+                inventoryIsOpen = true;
+                usingItem = true;
             }
         }
     }
@@ -208,39 +192,51 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         item.gameObject.SetActive(true);
     }
 
-    private void UseItem(Consumable item)
+    private void UseItem(Consumable item, Actor attacker)
     {
-        Actor playerActor = GetComponent<Actor>();
-        
-        if (item is HealthPotion)
+        switch (item.Type)
         {
-            HealthPotion potion = item as HealthPotion;
-            int healedAmount = potion.HealAmount;
-            playerActor.Heal(healedAmount);
-            UIManager.Instance.AddMessage($"You healed for {healedAmount} HP.", Color.green);
-        }
-        else if (item is Fireball)
-        {
-            Fireball fireball = item as Fireball;
-            List<Actor> nearbyEnemies = GameManager.Get.GetNearbyEnemies(transform.position);
-            foreach (Actor enemy in nearbyEnemies)
-            {
-                enemy.DoDamage(fireball.DamageAmount);
-            }
-            UIManager.Instance.AddMessage($"You dealt {fireball.DamageAmount} damage to nearby enemies.", Color.red);
-        }
-        else if (item is ScrollOfConfusion)
-        {
-            ScrollOfConfusion scroll = item as ScrollOfConfusion;
-            List<Actor> nearbyEnemies = GameManager.Get.GetNearbyEnemies(transform.position);
-            foreach (Actor enemy in nearbyEnemies)
-            {
-                enemy.Confuse(scroll.Duration);
-            }
-            UIManager.Instance.AddMessage("You confused nearby enemies.", Color.blue);
-        }
+            case Consumable.ItemType.HealthPotion:
+                attacker.Heal(5);
+                break;
+            case Consumable.ItemType.Fireball:
+                {
+                    var enemies = GameManager.Get.GetNearbyEnemies(transform.position);
+                    foreach (var enemy in enemies)
+                    {
+                        enemy.DoDamage(8, attacker); // Pass the attacker
+                        UIManager.Instance.AddMessage($"Your fireball damaged the {enemy.name} for 8HP", Color.magenta);
+                    }
+                    break;
+                }
 
-        // Destroy the item's GameObject
-        Destroy(item.gameObject);
+            case Consumable.ItemType.ScrollOfConfusion:
+                {
+                    var enemies = GameManager.Get.GetNearbyEnemies(transform.position);
+                    foreach (var enemy in enemies)
+                    {
+                        enemy.GetComponent<Enemy>().Confuse();
+                        UIManager.Instance.AddMessage($"Your scroll confused the {enemy.name}.", Color.magenta);
+                    }
+                    break;
+                }
+
+        }
+    }
+
+    private void CheckForLadder()
+    {
+        Ladder ladder = GameManager.Get.GetLadderAtLocation(transform.position);
+        if (ladder != null)
+        {
+            if (ladder.Up)
+            {
+                MapManager.Get.MoveUp();
+            }
+            else
+            {
+                MapManager.Get.MoveDown();
+            }
+        }
     }
 }

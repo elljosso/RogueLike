@@ -8,10 +8,12 @@ public class UIManager : MonoBehaviour
     public GameObject HealthBar;
     public GameObject Messages;
     public GameObject InventoryUIObject;
+    public GameObject FloorInfoObject; // Toegevoegd
 
     private HealthBar healthBarScript;
     private Messages messagesScript;
     private InventoryUI inventoryUIScript;
+    private FloorInfo floorInfoScript; // Toegevoegd
 
     private void Awake()
     {
@@ -55,6 +57,15 @@ public class UIManager : MonoBehaviour
                 Debug.LogError("InventoryUI script not found on InventoryUI GameObject.");
             }
         }
+
+        if (FloorInfoObject != null)
+        {
+            floorInfoScript = FloorInfoObject.GetComponent<FloorInfo>();
+            if (floorInfoScript == null)
+            {
+                Debug.LogError("FloorInfo script not found on FloorInfo GameObject.");
+            }
+        }
     }
 
     public InventoryUI InventoryUI
@@ -70,11 +81,36 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetLevel(int level)
+    {
+        if (healthBarScript != null)
+        {
+            healthBarScript.SetLevel(level);
+        }
+    }
+
+    public void SetXP(int xp)
+    {
+        if (healthBarScript != null)
+        {
+            healthBarScript.SetXP(xp);
+        }
+    }
+
     public void AddMessage(string message, Color color)
     {
         if (messagesScript != null)
         {
             messagesScript.AddMessage(message, color);
+        }
+    }
+
+    public void UpdateFloorInfo() // Toegevoegd
+    {
+        if (floorInfoScript != null)
+        {
+            floorInfoScript.UpdateFloorText();
+            floorInfoScript.UpdateEnemiesText();
         }
     }
 }

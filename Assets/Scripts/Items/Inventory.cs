@@ -5,8 +5,8 @@ namespace Items
 {
     public class Inventory
     {
-        private List<Consumable> items = new List<Consumable>();
-        private int maxItems = 2; // Default value
+        public List<Consumable> items = new List<Consumable>();
+        private int maxItems = 8; // Default value
 
         // Set the maximum number of items
         public void SetMaxItems(int max)
@@ -27,11 +27,6 @@ namespace Items
         public void DropItem(Consumable item)
         {
             items.Remove(item);
-        }
-
-        internal List<Consumable> GetItems()
-        {
-            throw new NotImplementedException();
         }
     }
 }

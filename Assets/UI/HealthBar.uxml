@@ -4,5 +4,9 @@
             <ui:VisualElement name="HealthBar" style="flex-grow: 1; -unity-background-image-tint-color: rgb(52, 255, 0); background-color: rgb(52, 255, 0); position: absolute; left: 1046px; top: -55px; right: auto; bottom: 56px; width: 50%; align-items: center; -unity-font-style: normal; border-left-color: rgba(255, 255, 255, 0); border-right-color: rgba(255, 255, 255, 0); border-top-color: rgba(255, 255, 255, 0); border-bottom-color: rgba(255, 255, 255, 0);" />
             <ui:Label tabindex="-1" text="17/30" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HealthText" style="font-size: 26px; color: rgb(255, 255, 255); -unity-background-image-tint-color: rgb(255, 255, 255);" />
         </ui:VisualElement>
+        <ui:VisualElement name="VisualElement2" style="flex-grow: 1;">
+            <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LevelText" />
+            <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="XPText" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

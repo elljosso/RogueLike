@@ -51,7 +51,7 @@ public class Action : MonoBehaviour
         // Als de schade positief is, verminder de hitpoints van het target
         if (damage > 0)
         {
-            target.DoDamage(damage);
+            target.DoDamage(damage, actor); // Pass the attacker as an argument
             UIManager.Instance.AddMessage($"{actor.name} hits {target.name} for {damage} damage.", actor.GetComponent<Player>() ? Color.white : Color.red);
         }
         else

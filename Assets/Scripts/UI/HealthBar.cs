@@ -3,9 +3,11 @@ using UnityEngine.UIElements;
 
 public class HealthBar : MonoBehaviour
 {
-    private VisualElement root;
-    private VisualElement healthBar;
-    private Label healthLabel;
+    public VisualElement root;
+    public VisualElement healthBar;
+    public Label healthLabel;
+    public Label levelLabel;
+    public Label xpLabel;
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +18,8 @@ public class HealthBar : MonoBehaviour
         // Zoek de UI-elementen voor de gezondheidsbalk en het label
         healthBar = root.Q<VisualElement>("HealthBar");
         healthLabel = root.Q<Label>("HealthText");
+        levelLabel = root.Q<Label>("LevelText");
+        xpLabel = root.Q<Label>("XPText");
 
         if (healthBar == null)
         {
@@ -36,5 +40,21 @@ public class HealthBar : MonoBehaviour
 
         // Stel de tekst van het label in op de huidige HP
         healthLabel.text = $"{currentHitPoints}/{maxHitPoints} HP";
+    }
+
+    public void SetLevel(int level)
+    {
+        if (levelLabel != null)
+        {
+            levelLabel.text = $"Level: {level}";
+        }
+    }
+
+    public void SetXP(int xp)
+    {
+        if (xpLabel != null)
+        {
+            xpLabel.text = $"XP: {xp}";
+        }
     }
 }

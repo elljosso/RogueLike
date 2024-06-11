@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
     private static MapManager instance;
+
+    public Text floorText; // Reference to the UI text for displaying the current floor
 
     private void Awake()
     {
@@ -33,7 +36,7 @@ public class MapManager : MonoBehaviour
     [Header("Features")]
     public Dictionary<Vector2Int, Node> Nodes = new Dictionary<Vector2Int, Node>();
     public List<Vector3Int> VisibleTiles;
-    public Dictionary<Vector3Int, TileData> Tiles;
+    public Dictionary<Vector3Int, TileData> Tiles = new Dictionary<Vector3Int, TileData>();
 
     [Header("Map Settings")]
     public int width = 80;
@@ -41,8 +44,9 @@ public class MapManager : MonoBehaviour
     public int roomMaxSize = 10;
     public int roomMinSize = 6;
     public int maxRooms = 30;
-    public int maxEnemies = 2; // Newly added variable for maximum number of enemies.
-    public int maxItems = 2; // Newly added variable for maximum number of items.
+    public int maxEnemies = 2; // Variabele voor maximum aantal vijanden
+    public int maxItems = 2; // Variabele voor maximum aantal items
+    public int floor = 0; // Variabele voor de huidige verdieping
 
     private void Start()
     {
@@ -51,21 +55,42 @@ public class MapManager : MonoBehaviour
 
     private void GenerateDungeon()
     {
+        ClearFloor();
+
         Tiles = new Dictionary<Vector3Int, TileData>();
         VisibleTiles = new List<Vector3Int>();
 
-        // Set the maximum number of enemies and items
+        // Instellen van de dungeon generator
         DungeonGenerator dungeonGenerator = new DungeonGenerator();
         dungeonGenerator.SetSize(width, height);
         dungeonGenerator.SetRoomSize(roomMinSize, roomMaxSize);
         dungeonGenerator.SetMaxRooms(maxRooms);
         dungeonGenerator.SetMaxEnemies(maxEnemies);
-        dungeonGenerator.SetMaxItems(maxItems); // Set the maximum number of items
+        dungeonGenerator.SetMaxItems(maxItems); // Zet het maximale aantal items
+        dungeonGenerator.SetCurrentFloor(floor); // Stel de huidige verdieping in
         dungeonGenerator.Generate();
 
         AddTileMapToDictionary(FloorMap);
         AddTileMapToDictionary(ObstacleMap);
         SetupFogMap();
+
+        UpdateFloorText(); // Update the UI text for the current floor
+    }
+
+    public void MoveUp()
+    {
+        ClearFloor();
+        floor--;
+        GenerateDungeon();
+        UpdateFloorText(); // Update the UI text for the current floor
+    }
+
+    public void MoveDown()
+    {
+        ClearFloor();
+        floor++;
+        GenerateDungeon();
+        UpdateFloorText(); // Update the UI text for the current floor
     }
 
     public bool InBounds(int x, int y) => 0 <= x && x < width && 0 <= y && y < height;
@@ -140,5 +165,24 @@ public class MapManager : MonoBehaviour
             FogMap.SetColor(pos, Color.clear);
             VisibleTiles.Add(pos);
         }
+    }
+
+    // Update the UI text to display the current floor
+    private void UpdateFloorText()
+    {
+        if (floorText != null)
+        {
+            floorText.text = "Floor " + floor;
+        }
+    }
+
+    // Clear the floor by removing all tiles from the maps
+    private void ClearFloor()
+    {
+        FloorMap.ClearAllTiles();
+        ObstacleMap.ClearAllTiles();
+        FogMap.ClearAllTiles();
+        Tiles.Clear();
+        VisibleTiles.Clear();
     }
 }
